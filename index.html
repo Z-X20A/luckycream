@@ -225,7 +225,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.0; 
+            renderer.toneMappingExposure = 1.3; // Increased for mobile visibility
             renderer.outputColorSpace = THREE.SRGBColorSpace;
             
             maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -244,19 +244,19 @@
             composer.addPass(renderScene);
             composer.addPass(bloomPass);
 
-            // Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.05);
+            // Lighting - Brightened for mobile screens
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.15); // Increased from 0.05
             scene.add(ambientLight);
             
-            // Spotlight - Warm purple/orange mix
-            const spotLight = new THREE.SpotLight(0xa855f7, 3000); 
+            // Spotlight - Warm purple/orange mix - Boosted
+            const spotLight = new THREE.SpotLight(0xa855f7, 3800); // Increased from 3000
             spotLight.position.set(20, 50, 20);
             spotLight.decay = 2;
             spotLight.distance = 200;
             scene.add(spotLight);
             
-            // Warm rim light for candles
-            const rimLight = new THREE.SpotLight(0xff4500, 1500); 
+            // Warm rim light for candles - Boosted
+            const rimLight = new THREE.SpotLight(0xff4500, 2200); // Increased from 1500
             rimLight.position.set(-20, 20, -20);
             scene.add(rimLight);
 
@@ -561,8 +561,6 @@
                     video.muted = true; 
                     video.playsInline = true;
                     video.crossOrigin = "anonymous";
-                    video.play().catch(e => console.log("Auto-play prevented"));
-
                     video.onloadedmetadata = () => {
                         const texture = new THREE.VideoTexture(video);
                         texture.colorSpace = THREE.SRGBColorSpace;
@@ -572,9 +570,9 @@
                         createFallbackCard(i, "Video Error");
                     }
                 } else {
-                    loader.load(item.url, (tex) => {
-                        tex.colorSpace = THREE.SRGBColorSpace;
-                        createPhoto(tex, i);
+                    loader.load(item.url, (texture) => {
+                        texture.colorSpace = THREE.SRGBColorSpace; 
+                        createPhoto(texture, i);
                     }, undefined, () => {
                         createFallbackCard(i, "Magic");
                     });
