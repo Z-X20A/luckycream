@@ -225,7 +225,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.5; // Increased even more for bright effect
+            renderer.toneMappingExposure = 1.2; // Slightly reduced from 1.5 to avoid overexposure
             renderer.outputColorSpace = THREE.SRGBColorSpace;
             
             maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -236,8 +236,8 @@
             
             // Bloom - Adjusted for Candle Glow
             bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
-            bloomPass.threshold = 0.7; // Lower threshold slightly to catch candle flames
-            bloomPass.strength = 2.2; 
+            bloomPass.threshold = 0.75; // Raised threshold slightly
+            bloomPass.strength = 1.8; // Reduced bloom strength
             bloomPass.radius = 0.6;
 
             composer = new EffectComposer(renderer);
@@ -248,15 +248,15 @@
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.15); // Increased from 0.05
             scene.add(ambientLight);
             
-            // Spotlight - Warm purple/orange mix - Boosted
-            const spotLight = new THREE.SpotLight(0xa855f7, 3800); // Increased from 3000
+            // Spotlight - Warm purple/orange mix - Adjusted
+            const spotLight = new THREE.SpotLight(0xa855f7, 3200); // Reduced from 3800
             spotLight.position.set(20, 50, 20);
             spotLight.decay = 2;
             spotLight.distance = 200;
             scene.add(spotLight);
             
-            // Warm rim light for candles - Boosted
-            const rimLight = new THREE.SpotLight(0xff4500, 2200); // Increased from 1500
+            // Warm rim light for candles - Adjusted
+            const rimLight = new THREE.SpotLight(0xff4500, 1600); // Reduced from 2200
             rimLight.position.set(-20, 20, -20);
             scene.add(rimLight);
 
@@ -287,13 +287,13 @@
 
         // --- Particle System (Updated) ---
         const createParticles = () => {
-            // 1. Highlight (Spheres) - White - Enhanced Brightness
+            // 1. Highlight (Spheres) - White - Balanced Brightness
             const matHighlight = new THREE.MeshStandardMaterial({ 
                 color: CONFIG.colors.highlight, 
                 metalness: 0.9, 
                 roughness: 0.1, 
                 emissive: 0xffffff,
-                emissiveIntensity: 3.5 // Boosted from 1.5 for stronger glow
+                emissiveIntensity: 2.0 // Reduced from 3.5
             });
             
             // 2. Base (Diamonds) - Violet Crystal - Reduced Count
@@ -322,11 +322,11 @@
                 emissiveIntensity: 0.5 
             });
 
-            // 4. Candle Flame (Cones) - Bright Fire - Enhanced Brightness
+            // 4. Candle Flame (Cones) - Bright Fire - Balanced Brightness
             const matCandleFlame = new THREE.MeshStandardMaterial({
                 color: 0xffaa00,
                 emissive: 0xff5500,
-                emissiveIntensity: 9.0, // Major boost from 4.0 for mobile visibility
+                emissiveIntensity: 5.0, // Reduced from 9.0
                 toneMapped: false
             });
 
