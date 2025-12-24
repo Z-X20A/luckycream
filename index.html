@@ -108,7 +108,7 @@
                         </div>
                         <div>
                             <p class="text-purple-100 text-sm font-bold uppercase tracking-wide">握拳 (Fist)</p>
-                            <p class="text-purple-100/60 text-xs">凝聚光芒</p>
+                            <p class="text-purple-100/60 text-xs">凝聚色彩</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-4">
@@ -547,15 +547,15 @@
 
         const createDefaultPhotos = () => {
             const defaultContent = [
-                { type: 'image', url: './228f23d3ec76bb5dca01ef189e8ceb2b.jpg' },
-                { type: 'image', url: './3eb7887787e95273cba4f597f1627ad9.jpg' },
-                { type: 'image', url: './60895b9915a96f4cec0ddebbaaffeeb2.jpg' },
-                { type: 'image', url: './658e9df16403a52809ae8308ee218c54.jpg' },
-                { type: 'image', url: './85eebb0079dabec15c95347d12074f4f.jpg' },
-                { type: 'image', url: './a6312506826568737138f9dcc9172ec1.jpg' },
-                { type: 'image', url: './ef82f7323b0bb870d7bd0aff82434605.jpg' },
-                { type: 'image', url: './f248decd04184a9b6f3031aa253b22a6.jpg' },
-                { type: 'video', url: './e5801b47b8dcfef065a97a1230957ce8.mp4' }
+            { type: 'image', url: './228f23d3ec76bb5dca01ef189e8ceb2b.jpg' },
+            { type: 'image', url: './3eb7887787e95273cba4f597f1627ad9.jpg' },
+            { type: 'image', url: './60895b9915a96f4cec0ddebbaaffeeb2.jpg' },
+            { type: 'image', url: './658e9df16403a52809ae8308ee218c54.jpg' },
+            { type: 'image', url: './85eebb0079dabec15c95347d12074f4f.jpg' },
+            { type: 'image', url: './a6312506826568737138f9dcc9172ec1.jpg' },
+            { type: 'image', url: './ef82f7323b0bb870d7bd0aff82434605.jpg' },
+            { type: 'image', url: './f248decd04184a9b6f3031aa253b22a6.jpg' },
+            { type: 'video', url: './e5801b47b8dcfef065a97a1230957ce8.mp4' }
             ];
 
             defaultContent.forEach((item, i) => {
@@ -602,8 +602,17 @@
         // --- Logic Update ---
         const updateState = (delta, time) => {
             
-            const targetBloomStrength = (STATE.mode === 'FOCUS') ? 0.3 : 2.2;
-            bloomPass.strength += (targetBloomStrength - bloomPass.strength) * 4.0 * delta;
+            const isFocus = (STATE.mode === 'FOCUS');
+
+            // 1. 动态辉光 (Bloom): 聚焦时几乎关闭辉光(0.05)，平时保持柔和(1.8)
+            // 这样照片周围不会有刺眼的光晕
+            const targetBloom = isFocus ? 0.05 : 1.8;
+            bloomPass.strength += (targetBloom - bloomPass.strength) * 5.0 * delta;
+
+            // 2. 动态曝光 (Exposure): 聚焦时降低曝光(0.6)，平时保持明亮(1.2)
+            // 这能有效防止照片变白/过曝
+            const targetExposure = isFocus ? 0.6 : 1.2;
+            renderer.toneMappingExposure += (targetExposure - renderer.toneMappingExposure) * 3.0 * delta;
 
             const dummy = new THREE.Object3D();
             
@@ -949,6 +958,3 @@
     </script>
 </body>
 </html>
-
-
-
