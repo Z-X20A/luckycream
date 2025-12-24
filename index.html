@@ -225,7 +225,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.toneMapping = THREE.ACESFilmicToneMapping;
-            renderer.toneMappingExposure = 1.3; // Increased for mobile visibility
+            renderer.toneMappingExposure = 1.5; // Increased even more for bright effect
             renderer.outputColorSpace = THREE.SRGBColorSpace;
             
             maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -287,16 +287,16 @@
 
         // --- Particle System (Updated) ---
         const createParticles = () => {
-            // 1. Highlight (Spheres) - White
+            // 1. Highlight (Spheres) - White - Enhanced Brightness
             const matHighlight = new THREE.MeshStandardMaterial({ 
                 color: CONFIG.colors.highlight, 
                 metalness: 0.9, 
                 roughness: 0.1, 
                 emissive: 0xffffff,
-                emissiveIntensity: 1.5
+                emissiveIntensity: 3.5 // Boosted from 1.5 for stronger glow
             });
             
-            // 2. Base (Diamonds) - Violet Crystal
+            // 2. Base (Diamonds) - Violet Crystal - Reduced Count
             // 升级为 MeshPhysicalMaterial 以获得真实的水晶玻璃质感
             const matBase = new THREE.MeshPhysicalMaterial({ 
                 color: CONFIG.colors.base, 
@@ -322,11 +322,11 @@
                 emissiveIntensity: 0.5 
             });
 
-            // 4. Candle Flame (Cones) - Bright Fire
+            // 4. Candle Flame (Cones) - Bright Fire - Enhanced Brightness
             const matCandleFlame = new THREE.MeshStandardMaterial({
                 color: 0xffaa00,
                 emissive: 0xff5500,
-                emissiveIntensity: 4.0, 
+                emissiveIntensity: 9.0, // Major boost from 4.0 for mobile visibility
                 toneMapped: false
             });
 
@@ -341,7 +341,8 @@
             geomFlame.translate(0, 0.5, 0); 
             
             const meshHighlight = new THREE.InstancedMesh(geomSphere, matHighlight, 400); 
-            const meshBase = new THREE.InstancedMesh(geomDiamond, matBase, 800); 
+            // Reduced diamond count from 800 to 500
+            const meshBase = new THREE.InstancedMesh(geomDiamond, matBase, 500); 
             
             const meshCandleBody = new THREE.InstancedMesh(geomCyl, matCandleBody, 150);  
             const meshCandleFlame = new THREE.InstancedMesh(geomFlame, matCandleFlame, 150);
